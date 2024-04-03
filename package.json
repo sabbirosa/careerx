@@ -1,0 +1,15 @@
+{
+  "name": "careerx",
+  "version": "1.0.0",
+  "description": "",
+  "main": "postcss.config.js",
+  "scripts": {
+    "build:css": "postcss static/css/styles.css -o static/css/tailwind.css",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "postcss": "^8.4.38"
+  }
+}
