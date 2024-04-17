@@ -1,9 +1,9 @@
 import {
-    createBrowserRouter
+  createBrowserRouter
 } from "react-router-dom";
 import App from "../App";
-import About from "../pages/About";
 import Home from "../pages/Home";
+import PostJob from "../pages/PostJob";
 
 const router = createBrowserRouter([
     {
@@ -15,8 +15,8 @@ const router = createBrowserRouter([
           element: <Home/>,
         },
         {
-            path: "/about",
-            element: <About/>,
+            path: "/post-job",
+            element: <PostJob/>,
         }
       ],
     },
