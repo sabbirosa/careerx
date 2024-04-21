@@ -1,172 +1,599 @@
- import React, { useState } from 'react';
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import styled from "styled-components";
+import { getSingleHandler, updateHandler } from "../utils/FetchHandlers";
+import { CiSquarePlus } from "react-icons/ci";
+
+import { Job_Status, Job_Type } from "../utils/JobData";
+
 import { useForm } from "react-hook-form";
-import { useLoaderData, useParams } from 'react-router-dom';
-import CreateableSelect from 'react-select/creatable';
+import axios from "axios";
+import Swal from "sweetalert2";
 
+import { TagsInput } from "react-tag-input-component";
 
- const EditJob = () => {
-  const {id} = useParams();
+import LoadingComTwo from "../components/shared/LoadingComTwo";
 
-  const {_id, jobTitle, companyName, minPrice, maxPrice, salaryType, jobLocation, postingDate, companyLogo, jobDescription, postedBy, skills, experienceLevel, employmentType} = useLoaderData();
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
-  const [selecttedOption, setSelectedOption] = useState(null)
+import advancedFormat from "dayjs/plugin/advancedFormat";
+import dayjs from "dayjs";
+dayjs.extend(advancedFormat);
 
-  const {
-      register,
-      handleSubmit,
-      watch,
-      formState: { errors },
-    } = useForm()
-  
-    const onSubmit = (data) => {
-      data.skills = selecttedOption
-      fetch(`http://localhost:4000/updateJob/${id}`,
-      {method: "PATCH",
-       headers: {'content-type': 'application/json'},
-       body: JSON.stringify(data)}).then(res => res.json()).then((result) => {
-          console.log(result)
-      })
+import { useQuery, useMutation, QueryClient } from "@tanstack/react-query";
+const queryClient = new QueryClient(); // Create a client
+
+const EditJob = () => {
+    const { id } = useParams();
+    const {
+        isPending,
+        isError,
+        data: job,
+        error,
+    } = useQuery({
+        queryKey: ["updateJob"],
+        queryFn: () =>
+            getSingleHandler(
+                `http://localhost:3000/api/v1/jobs/${id}`
+            ),
+    });
+
+    const [deadline, setDeadline] = useState(new Date());
+    const [skills, setSkills] = useState([]);
+    const [facilities, setFacilities] = useState([]);
+
+    const {
+        register,
+        handleSubmit,
+        watch,
+        reset,
+        formState: { errors },
+    } = useForm();
+
+    useEffect(() => {
+        if (job?.jobDeadline) {
+            const dateObject = new Date(job?.jobDeadline);
+            setDeadline(dateObject || new Date());
+        }
+        setSkills(job?.jobSkills || []);
+        setFacilities(job?.jobFacilities || []);
+    }, [job]);
+
+    const updateJobMutation = useMutation({
+        mutationFn: updateHandler,
+        onSuccess: (data, variable, context) => {
+            queryClient.invalidateQueries({ queryKey: ["updateJob"] });
+            Swal.fire({
+                icon: "success",
+                title: "Job Updated",
+                text: data?.message,
+            });
+        },
+        onError: (error, variables, context) => {
+            console.log(error);
+            Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: error?.message,
+            });
+        },
+    });
+
+    const onSubmit = async (data) => {
+        const updateJob = {
+            company: data?.company,
+            position: data?.position,
+            jobStatus: data?.status,
+            jobType: data?.type,
+            jobLocation: data?.location,
+            jobVacancy: data?.vacancy,
+            jobSalary: data?.salary,
+            jobDeadline: deadline + "",
+            jobDescription: data?.description,
+            jobSkills: skills,
+            jobFacilities: facilities,
+            jobContact: data?.contact,
+        };
+        // posting;
+        updateJobMutation.mutate({
+            body: updateJob,
+            url: `http://localhost:3000/api/v1/jobs/${id}`,
+        });
+    };
+    // const onSubmit = (data) => {
+    //     console.log({ data, skills, facilities });
+    // };
+
+    if (isPending) {
+        return <LoadingComTwo />;
+    }
+    if (isError) {
+        return <h2 className="">{error?.message}</h2>;
     }
 
-    const options = [
-      { value: 'html', label: 'HTML' },
-      { value: 'css', label: 'CSS' },
-      { value: 'javascript', label: 'JavaScript' },
-      { value: 'react', label: 'React' },
-      { value: 'nodejs', label: 'NodeJs' },
-      { value: 'express', label: 'Express' },
-      { value: 'mongodb', label: 'MongoDB' },
-      { value: 'nextjs', label: 'NextJs' },
-      { value: 'typescript', label: 'TypeScript' },
-      { value: 'python', label: 'Python' },
-      { value: 'django', label: 'Django' },
-      { value: 'flask', label: 'Flask' },
-      { value: 'java', label: 'Java' },
-      { value: 'spring', label: 'Spring' },
-      { value: 'c', label: 'C' },
-      { value: 'c++', label: 'C++' },
-      { value: 'c#', label: 'C#' },
-      { value: 'php', label: 'PHP' },
-      { value: 'laravel', label: 'Laravel' }
-    ]
-
-   return (
-    <div className='max-w-screen-2xl container mx-auto xl:px-24 px-4 lg:px-16'>
-    <div className='bg-[#FAFAFA] py-10 px-4 '>
-        <form onSubmit={handleSubmit(onSubmit)} className='space-y-5'>
-            
-            {/* First Row  */}
-            <div className='create-job-flex'>
-                
-                
-                <div className='lg:w-1/2 w-full'>
-                    <label className='block mb-2 text-lg'>Job Title</label>
-                    <input className='create-job-input' type="text" defaultValue={jobTitle} {...register("jobTitle")} />
+    return (
+        <Wrapper>
+            <div className="">
+                <div className="title-row">
+                    Update Job
+                    <CiSquarePlus className="ml-1 text-xl md:text-2xl" />
                 </div>
+                <div className="content-row">
+                    <form autoComplete="off" onSubmit={handleSubmit(onSubmit)}>
+                        <div className="form">
+                            {/* Position */}
+                            <div className="row">
+                                <label htmlFor="position">Position</label>
+                                <input
+                                    type="text"
+                                    id="position"
+                                    name="position"
+                                    placeholder="Job Position"
+                                    defaultValue={job?.position}
+                                    {...register("position", {
+                                        required: {
+                                            value: true,
+                                            message: "Job Positon is required",
+                                        },
+                                        maxLength: {
+                                            value: 100,
+                                            message: "Too long (max 100char)",
+                                        },
+                                        minLength: {
+                                            value: 3,
+                                            message: "Too short (max 3char)",
+                                        },
+                                    })}
+                                />
+                                {errors?.position && (
+                                    <span className="text-[10px] font-semibold text-red-600 mt-1 pl-1 tracking-wider">
+                                        {errors?.position?.message}
+                                    </span>
+                                )}
+                            </div>
 
-                <div className='lg:w-1/2 w-full'>
-                    <label className='block mb-2 text-lg'>Company Name</label>
-                    <input defaultValue={companyName} className='create-job-input' type="text" placeholder="Zaylen Digital" {...register("companyName")} />
+                            {/* Company */}
+                            <div className="row">
+                                <label htmlFor="company">Company</label>
+                                <input
+                                    type="text"
+                                    id="company"
+                                    name="company"
+                                    placeholder="Company Name"
+                                    defaultValue={job?.company}
+                                    {...register("company", {
+                                        required: {
+                                            value: true,
+                                            message: "Job Company is required",
+                                        },
+                                        maxLength: {
+                                            value: 100,
+                                            message: "Too long (max 100char)",
+                                        },
+                                        minLength: {
+                                            value: 3,
+                                            message: "Too short (max 3char)",
+                                        },
+                                    })}
+                                />
+                                {errors?.company && (
+                                    <span className="text-[10px] font-semibold text-red-600 mt-1 pl-1 tracking-wider">
+                                        {errors?.company?.message}
+                                    </span>
+                                )}
+                            </div>
+
+                            {/* Location */}
+                            <div className="row">
+                                <label htmlFor="location">Location</label>
+                                <input
+                                    type="text"
+                                    id="location"
+                                    name="location"
+                                    placeholder="Job Location"
+                                    defaultValue={job?.jobLocation}
+                                    {...register("location", {
+                                        required: {
+                                            value: true,
+                                            message: "Job Location is required",
+                                        },
+                                        maxLength: {
+                                            value: 100,
+                                            message: "Too long (max 100char)",
+                                        },
+                                        minLength: {
+                                            value: 3,
+                                            message: "Too short (max 3char)",
+                                        },
+                                    })}
+                                />
+                                {errors?.location && (
+                                    <span className="text-[10px] font-semibold text-red-600 mt-1 pl-1 tracking-wider">
+                                        {errors?.location?.message}
+                                    </span>
+                                )}
+                            </div>
+
+                            {/* Status */}
+                            <div className="row">
+                                <label htmlFor="status">Job Status</label>
+                                <select
+                                    defaultValue={job?.jobStatus}
+                                    name="status"
+                                    id="stauts"
+                                    {...register("status", {
+                                        required: {
+                                            value: true,
+                                            message: "Job Status is required",
+                                        },
+                                        validate: {
+                                            valueType: (value) => {
+                                                return (
+                                                    value !== "none" ||
+                                                    "Job Status is required"
+                                                );
+                                            },
+                                        },
+                                    })}
+                                >
+                                    <option disabled value="none">
+                                        Select a Job Status
+                                    </option>
+
+                                    {Job_Status?.map((job, index) => (
+                                        <option value={job} key={index + job}>
+                                            {job}
+                                        </option>
+                                    ))}
+                                </select>
+                                {errors?.status && (
+                                    <span className="text-[10px] font-semibold text-red-600 mt-1 pl-1 tracking-wider">
+                                        {errors?.status?.message}
+                                    </span>
+                                )}
+                            </div>
+
+                            {/* Type */}
+                            <div className="row">
+                                <label htmlFor="type">Job Type</label>
+                                <select
+                                    defaultValue={job?.jobType}
+                                    name="type"
+                                    id="type"
+                                    {...register("type", {
+                                        required: {
+                                            value: true,
+                                            message: "Job Type is required",
+                                        },
+                                        validate: {
+                                            valueType: (value) => {
+                                                return (
+                                                    value !== "none" ||
+                                                    "Job Type is required"
+                                                );
+                                            },
+                                        },
+                                    })}
+                                >
+                                    <option disabled value="none">
+                                        Select a Job Type
+                                    </option>
+                                    {Job_Type?.map((job, index) => (
+                                        <option value={job} key={index + job}>
+                                            {job}
+                                        </option>
+                                    ))}
+                                </select>
+                                {errors?.type && (
+                                    <span className="text-[10px] font-semibold text-red-600 mt-1 pl-1 tracking-wider">
+                                        {errors?.type?.message}
+                                    </span>
+                                )}
+                            </div>
+
+                            {/* Vacancy */}
+                            <div className="row">
+                                <label htmlFor="vacancy">Vacancy</label>
+                                <input
+                                    type="text"
+                                    id="vacancy"
+                                    name="vacancy"
+                                    placeholder="Job Vacancy"
+                                    defaultValue={job?.jobVacancy}
+                                    {...register("vacancy", {
+                                        required: {
+                                            value: true,
+                                            message: "Job vacancy is required",
+                                        },
+                                        max: {
+                                            value: 1000,
+                                            message:
+                                                "Check number of job vacancy(too much)",
+                                        },
+                                        min: {
+                                            value: 1,
+                                            message:
+                                                "Job Vacancy can't 0 or smaller",
+                                        },
+                                    })}
+                                />
+                                {errors?.vacancy && (
+                                    <span className="text-[10px] font-semibold text-red-600 mt-1 pl-1 tracking-wider">
+                                        {errors?.vacancy?.message}
+                                    </span>
+                                )}
+                            </div>
+
+                            {/* Salary */}
+                            <div className="row">
+                                <label htmlFor="salary">Salary</label>
+                                <input
+                                    type="text"
+                                    id="salary"
+                                    name="salary"
+                                    placeholder="Job salary"
+                                    defaultValue={job?.jobSalary}
+                                    {...register("salary", {
+                                        required: {
+                                            value: true,
+                                            message: "Job salary is required",
+                                        },
+                                        max: {
+                                            value: 1000000,
+                                            message:
+                                                "Check number of job salary(too much)",
+                                        },
+                                        min: {
+                                            value: 10,
+                                            message:
+                                                "Job Vacancy can't 0 or smaller",
+                                        },
+                                    })}
+                                />
+                                {errors?.salary && (
+                                    <span className="text-[10px] font-semibold text-red-600 mt-1 pl-1 tracking-wider">
+                                        {errors?.salary?.message}
+                                    </span>
+                                )}
+                            </div>
+
+                            {/* Deadline */}
+                            <div className="row">
+                                <label htmlFor="deadline">Job Deadline</label>
+                                <DatePicker
+                                    selected={deadline}
+                                    onChange={(date) => setDeadline(date)}
+                                />
+                            </div>
+
+                            {/* Contact */}
+                            <div className="row">
+                                <label htmlFor="contact">Contact Mail</label>
+                                <input
+                                    type="text"
+                                    id="contact"
+                                    name="contact"
+                                    placeholder="Job Contact"
+                                    defaultValue={job?.jobContact}
+                                    {...register("contact", {
+                                        required: {
+                                            value: true,
+                                            message: "Job contact is required",
+                                        },
+                                    })}
+                                />
+                                {errors?.contact && (
+                                    <span className="text-[10px] font-semibold text-red-600 mt-1 pl-1 tracking-wider">
+                                        {errors?.contact?.message}
+                                    </span>
+                                )}
+                            </div>
+                        </div>
+
+                        {/* Tag inputs */}
+                        <div className="flex flex-col  min-[600px]:flex-row  justify-between items-center gap-4 mt-5">
+                            <div className="row gap-y-2">
+                                <label htmlFor="position">
+                                    Required Skills
+                                </label>
+                                <TagsInput
+                                    value={skills}
+                                    onChange={setSkills}
+                                    name="skills"
+                                    placeHolder="HTML, CSS"
+                                    separators={["Enter", ","]}
+                                    onRemoved={["Backspace"]}
+                                    classNames={{
+                                        tag: "tag-cls",
+                                        input: "input-cls",
+                                    }}
+                                />
+                            </div>
+                            <div className="row gap-y-2">
+                                <label htmlFor="position">Job Facilities</label>
+                                <TagsInput
+                                    value={facilities}
+                                    onChange={setFacilities}
+                                    name="facilities"
+                                    placeHolder="Type here"
+                                    separators={["Enter", ","]}
+                                    onRemoved={["Backspace"]}
+                                    classNames={{
+                                        tag: "tag-cls",
+                                        input: "input-cls",
+                                    }}
+                                />
+                            </div>
+                        </div>
+
+                        {/* Description */}
+                        <div className="row  mt-5">
+                            <label htmlFor="description">Job Description</label>
+                            <textarea
+                                type="text"
+                                id="description"
+                                name="description"
+                                placeholder="Job Description"
+                                className="w-full max-w-none"
+                                defaultValue={job?.jobDescription}
+                                {...register("description", {
+                                    required: {
+                                        value: true,
+                                        message: "Job description is required",
+                                    },
+                                    maxLength: {
+                                        value: 2000,
+                                        message: "Too long (max 2000char)",
+                                    },
+                                    minLength: {
+                                        value: 10,
+                                        message: "Too short (max 10char)",
+                                    },
+                                })}
+                            />
+                            {errors?.description && (
+                                <span className="text-[10px] font-semibold text-red-600 mt-1 pl-1 tracking-wider">
+                                    {errors?.description?.message}
+                                </span>
+                            )}
+                        </div>
+
+                        <div className="row mt-4 sm:mt-0">
+                            <label htmlFor="" className="invisible">
+                                delete
+                            </label>
+                            <input
+                                type="submit"
+                                value="update"
+                                className="btn"
+                            />
+                        </div>
+                    </form>
                 </div>
             </div>
+        </Wrapper>
+    );
+};
 
-            {/* Second Row  */}
-            <div className='create-job-flex'>
-    
-                <div className='lg:w-1/2 w-full'>
-                    <label className='block mb-2 text-lg'>Minimum Salary</label>
-                    <input defaultValue={minPrice} className='create-job-input' type="text" placeholder="20k BDT" {...register("minPrice")} />
-                </div>
+const Wrapper = styled.section`
+    .title-row {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        font-size: calc(0.9rem + 0.4vw);
+        text-transform: capitalize;
+        letter-spacing: 1px;
+        font-weight: 600;
+        opacity: 0.85;
+        color: var(--color-black);
+        position: relative;
+    }
+    .title-row:before {
+        content: "";
+        position: absolute;
+        bottom: -4px;
+        left: 0;
+        width: calc(30px + 0.7vw);
+        height: calc(2px + 0.1vw);
+        background-color: var(--color-primary);
+    }
+    .content-row {
+        margin-top: calc(2rem + 0.5vw);
+    }
+    .form {
+        margin-top: calc(30px + 1vw);
+        width: 100%;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        justify-content: space-between;
+        align-items: center;
+        grid-gap: calc(1rem + 0.5vw);
+    }
+    @media screen and (max-width: 1000px) {
+        .form {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+    @media screen and (max-width: 600px) {
+        .form {
+            grid-template-columns: 1fr;
+        }
+    }
+    .row {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+    }
+    .row label {
+        font-size: 11.3px;
+        font-weight: 600;
+        letter-spacing: 1px;
+        color: var(--color-black);
+        opacity: 0.95;
+    }
+    input,
+    select,
+    textarea {
+        width: 100%;
+        max-width: 500px;
+        padding: 8px 14px;
+        margin-top: 6px;
+        display: inline-block;
+        border: 1px solid #0000004a;
+        border-radius: 4px;
+        box-sizing: border-box;
+        font-size: calc(0.8rem + 0.1vw);
+        outline: none;
+        color: var(--color-black);
+    }
+    textarea {
+        max-width: none;
+        min-height: 100px;
+    }
+    select {
+        padding-left: 2px;
+        text-transform: capitalize;
+    }
+    input:focus,
+    select:focus,
+    textarea:focus {
+        outline: none;
+        border: 1px solid #00000086;
+    }
+    .input-cls {
+        max-width: none;
+        width: 100%;
+        font-size: 13px;
+        padding: 5px 10px;
+    }
+    .tag-cls {
+        font-size: 14px;
+    }
+    /* .rti--container {
+        border: 1px solid #00000086;
+    } */
+    .btn {
+        width: 100%;
+        max-width: 150px;
+        height: 100%;
+        display: inline-block;
+        background-color: var(--color-black);
+        color: var(--color-white);
+        cursor: pointer;
+        transition: all 0.3s linear;
+        text-transform: capitalize;
+        font-size: calc(0.9rem + 0.1vw);
+    }
+    .btn:hover {
+        background-color: var(--color-primary);
+    }
+    @media screen and (max-width: 600px) {
+        .btn {
+            margin: 0 auto;
+            margin-top: -6px;
+        }
+    }
+`;
 
-                <div className='lg:w-1/2 w-full'>
-                    <label className='block mb-2 text-lg'>Maximum Salary</label>
-                    <input defaultValue={maxPrice} className='create-job-input' type="text" placeholder="100k BDT" {...register("maxPrice")} />
-                </div>
-            </div>
-
-            {/* Third Row  */}
-            <div className='create-job-flex'>
-                
-                
-                <div className='lg:w-1/2 w-full'>
-                    <label className='block mb-2 text-lg'>Salary Type</label>
-                    <select {...register("salaryType")} className='create-job-input'>
-                        <option value={salaryType}>{salaryType}</option>
-                        <option value="Hourly">Hourly</option>
-                        <option value="Monthly">Monthly</option>
-                        <option value="Yearly">Yearly</option>
-                    </select>
-
-                </div>
-
-                <div className='lg:w-1/2 w-full'>
-                    <label className='block mb-2 text-lg'>Job Location</label>
-                    <input defaultValue={jobLocation} className='create-job-input' type="text" placeholder="Dhaka" {...register("jobLocation")} />
-                </div>
-            </div>
-
-            {/* Fourth Row  */}
-            <div className='create-job-flex'>
-                <div className='lg:w-1/2 w-full'>
-                    <label className='block mb-2 text-lg'>Job Posting Date</label>
-                    <input defaultValue={postingDate} className='create-job-input' type="date" placeholder="2023-03-27" {...register("postingDate")} />
-                </div>
-                
-                <div className='lg:w-1/2 w-full'>
-                    <label className='block mb-2 text-lg'>Experience Level</label>
-                    <select {...register("experienceLevel")} className='create-job-input'>
-                        <option value={experienceLevel}>{experienceLevel}</option>
-                        <option value="Freasher">Freasher</option>
-                        <option value="Internship">Internship</option>
-                        <option value="Work Remotely">Work Remotely</option>
-                    </select>
-                </div>
-            </div>
-            
-            {/* Fifth Row  */}
-            <div className=''>
-                <label className='block mb-2 text-lg'>Required Skill Sets</label>
-                <CreateableSelect className='create-job-input py-4' defaultValue={skills} onChange={setSelectedOption} options={options} isMulti/>
-            </div>
-
-            {/* Sixth Row  */}
-            <div className='create-job-flex'>
-                <div className='lg:w-1/2 w-full'>
-                    <label className='block mb-2 text-lg'>Company Logo</label>
-                    <input defaultValue={companyLogo} className='create-job-input' type="url" placeholder="https://zaylendigital.com/img/200x200/zaylen-digital-logo.png" {...register("companyLogo")} />
-                </div>
-                
-                <div className='lg:w-1/2 w-full'>
-                    <label className='block mb-2 text-lg'>Employment Type</label>
-                    <select {...register("employmentType")} className='create-job-input'>
-                        <option value={employmentType}>{employmentType}</option>
-                        <option value="Full-Time (Onsite)">Full-Time (Onsite)</option>
-                        <option value="Part-Time (Onsite)">Part-Time (Onsite)</option>
-                        <option value="Remote">Remote</option>
-                    </select>
-                </div>
-            </div>
-
-            {/* Seventh Row  */}
-            <div className=''>
-                <label className='block mb-2 text-lg'>Job Description</label>
-                <textarea defaultValue={jobDescription} className='h-32 w-full pl-3 py-3 focus:outline-none placeholder:text-gray-400' placeholder="Job Description" {...register("jobDescription")} />
-            </div>
-
-            {/* Eighth Row  */}
-            <div className=''>
-                <label className='block mb-2 text-lg'>Posted By</label>
-                <input defaultValue={postedBy} className='create-job-input' type="email" placeholder="jhon.doe@gmail.com" {...register("postedBy")} />
-                
-            </div>
-
-
-            <input type="submit" className='block mt-12 bg-primary text-white font-semibold px-8 py-2 rounded-md cursor-pointer' />
-            
-        </form>
-    </div>
-</div>
-   )
- }
- 
- export default EditJob
+export default EditJob;
