@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import React, { useContext, useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { AuthContext } from "../context/AuthProvider";
 
 const MyJobs = () => {
-    const email = "sabbir@zaylendigital.com"
+    const { user } = useContext(AuthContext);
     const [jobs, setJobs] = useState([])
     const [searchText, setSearchText] = useState('')
 
@@ -10,10 +11,10 @@ const MyJobs = () => {
 
     useEffect(() => {
         setIsLoading(true)
-        fetch(`http://localhost:4000/myJobs/sabbir@zaylendigital.com`).then(res => res.json()).then(data => {
+        fetch(`http://localhost:4000/myJobs/${user?.email}`).then(res => res.json()).then(data => {
             setJobs(data)
         });
-    }, [isLoading])
+    }, [user, searchText])
     
     const handleSearch = () => {
         const filter = jobs.filter(job => job.title.toLowerCase().includes(searchText.toLowerCase()) !== -1)
