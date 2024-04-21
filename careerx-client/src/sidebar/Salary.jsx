@@ -17,10 +17,10 @@ const Salary = ({handleChange, handleClick}) => {
         <input type="radio" name="test2" id="text" value="" onChange={handleChange} />
         <span className='checkmark'></span>Any
       </label>
-      <InputField handleChange={handleChange} value={30} title='< 30000k' name='test2'/>
-      <InputField handleChange={handleChange} value={50} title='< 50000k' name='test2'/>
-      <InputField handleChange={handleChange} value={80} title='< 80000k' name='test2'/>
-      <InputField handleChange={handleChange} value={100} title='< 100000k' name='test2'/>
+      <InputField handleChange={handleChange} value={30} title='< 30000' name='test2'/>
+      <InputField handleChange={handleChange} value={50} title='< 50000' name='test2'/>
+      <InputField handleChange={handleChange} value={80} title='< 80000' name='test2'/>
+      <InputField handleChange={handleChange} value={100} title='< 100000' name='test2'/>
         </div>
 
     </>

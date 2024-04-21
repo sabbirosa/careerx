@@ -13,7 +13,7 @@ const Home = () => {
 
     useEffect(() => {
         setIsLoading(true);
-        fetch("jobs.json").then(res => res.json()).then(data => {
+        fetch("http://localhost:4000/all-jobs").then(res => res.json()).then(data => {
             setJobs(data);
             setIsLoading(false);
         })
@@ -77,7 +77,8 @@ const Home = () => {
       <>
       <Banner query={query} handleInputChange={handleInputChange}/>
 
-      <div className='bg-[#FAFAFA] md:grid grid-cols-4 gap-8 lg:px-24 px-4 py-12'>
+      <div className='bg-[#FAFAFA]'>
+        <div className='max-w-screen-2xl container mx-auto xl:px-24 md:grid grid-cols-4 gap-8 lg:px-24 px-4 py-12'>
         <div className='bg-white p-8 rounded'><Sidebar handleChange={handleChange} handleClick={handleClick}/></div>
         <div className='col-span-3 bg-white p-4 rounded'>
         {
@@ -96,6 +97,7 @@ const Home = () => {
 
         }
         
+        </div>
         </div>
         
         

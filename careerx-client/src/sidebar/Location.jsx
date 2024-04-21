@@ -10,10 +10,10 @@ const Location = ({handleChange}) => {
         <input type="radio" name="test" id="text" value="" onChange={handleChange} />
         <span className='checkmark'></span>All
       </label>
-      <InputField handleChange={handleChange} value='london' title='London' name='test'/>
-      <InputField handleChange={handleChange} value='seattle' title='Seattle' name='test'/>
-      <InputField handleChange={handleChange} value='madrid' title='Madrid' name='test'/>
-      <InputField handleChange={handleChange} value='Boston' title='Boston' name='test'/>
+      <InputField handleChange={handleChange} value='Dhaka' title='Dhaka' name='test'/>
+      <InputField handleChange={handleChange} value='Sylhet' title='Sylhet' name='test'/>
+      <InputField handleChange={handleChange} value='Chittagong' title='Chittagong' name='test'/>
+      <InputField handleChange={handleChange} value='Rajshahi' title='Rajshahi' name='test'/>
 
     </div>
     </>

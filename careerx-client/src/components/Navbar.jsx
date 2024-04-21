@@ -16,10 +16,6 @@ const Navbar = () => {
             title: 'My Jobs'
         },
         {
-            path: '/salary-estimator',
-            title: 'Salary Estimator'
-        },
-        {
             path: '/post-job',
             title: 'Post Job'
         }

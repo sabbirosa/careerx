@@ -12,9 +12,15 @@ const PostJob = () => {
         formState: { errors },
       } = useForm()
     
-      const onSubmit = (data) => console.log(data)
-    
-      console.log(watch("example"))
+      const onSubmit = (data) => {
+        data.skills = selecttedOption
+        fetch('http://localhost:4000/post-job',
+        {method: "POST",
+         headers: {'content-type': 'application/json'},
+         body: JSON.stringify(data)}).then(res => res.json()).then((result) => {
+            console.log(result)
+        })
+      }
 
       const options = [
         { value: 'html', label: 'HTML' },
@@ -104,7 +110,7 @@ const PostJob = () => {
                     
                     <div className='lg:w-1/2 w-full'>
                         <label className='block mb-2 text-lg'>Experience Level</label>
-                        <select {...register("salaryType")} className='create-job-input'>
+                        <select {...register("experienceLevel")} className='create-job-input'>
                             <option value="">Choose Your Experience</option>
                             <option value="Freasher">Freasher</option>
                             <option value="Internship">Internship</option>
@@ -128,7 +134,7 @@ const PostJob = () => {
                     
                     <div className='lg:w-1/2 w-full'>
                         <label className='block mb-2 text-lg'>Employment Type</label>
-                        <select {...register("salaryType")} className='create-job-input'>
+                        <select {...register("employmentType")} className='create-job-input'>
                             <option value="">Choose Your Employment Type</option>
                             <option value="Full-Time (Onsite)">Full-Time (Onsite)</option>
                             <option value="Part-Time (Onsite)">Part-Time (Onsite)</option>
@@ -140,7 +146,7 @@ const PostJob = () => {
                 {/* Seventh Row  */}
                 <div className=''>
                     <label className='block mb-2 text-lg'>Job Description</label>
-                    <textarea className='w-full pl-3 py-3 py-1.5 focus:outline-none placeholder:text-gray-400' placeholder="Job Description" {...register("jobDescription")} />
+                    <textarea className='w-full pl-3 py-3 focus:outline-none placeholder:text-gray-400' placeholder="Job Description" {...register("jobDescription")} />
                 </div>
 
                 {/* Eighth Row  */}
