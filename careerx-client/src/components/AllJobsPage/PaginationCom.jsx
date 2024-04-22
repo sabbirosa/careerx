@@ -1,8 +1,8 @@
 import React from "react";
 
 import ReactPaginate from "react-paginate";
-import { useJobContext } from "../../context/JobContext";
 import styled from "styled-components";
+import { useJobContext } from "../../context/JobContext";
 
 const PaginationCom = () => {
     const { handleJobFetch, jobs } = useJobContext();
@@ -14,7 +14,7 @@ const PaginationCom = () => {
         // );
         // setItemOffset(newOffset);
         handleJobFetch(
-            `http://localhost:3000/api/v1/jobs?page=${
+            `https://careerx-server.vercel.app/api/v1/jobs?page=${
                 e.selected + 1
             }&limit=5`
         );

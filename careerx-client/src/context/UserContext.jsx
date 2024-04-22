@@ -1,5 +1,5 @@
-import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
+import React, { useContext, useEffect, useState } from "react";
 
 const userContext = React.createContext();
 
@@ -12,7 +12,7 @@ const UserContext = ({ children }) => {
         setUserLoading(true);
         try {
             const response = await axios.get(
-                `http://localhost:3000/api/v1/auth/me`,
+                `https://careerx-server.vercel.app/api/v1/auth/me`,
                 { withCredentials: true }
             );
             setUserError({ status: false, message: "" });
@@ -36,4 +36,5 @@ const UserContext = ({ children }) => {
 
 const useUserContext = () => useContext(userContext);
 
-export { useUserContext, UserContext };
+export { UserContext, useUserContext };
+

@@ -1,13 +1,13 @@
-import React, { useState } from "react";
-import styled from "styled-components";
+import React from "react";
 import { useParams } from "react-router-dom";
+import styled from "styled-components";
 
 import { useQuery } from "@tanstack/react-query";
-import { getSingleHandler } from "../utils/FetchHandlers";
 import LoadingComTwo from "../components/shared/LoadingComTwo";
+import { getSingleHandler } from "../utils/FetchHandlers";
 
-import advancedFormat from "dayjs/plugin/advancedFormat";
 import dayjs from "dayjs";
+import advancedFormat from "dayjs/plugin/advancedFormat";
 dayjs.extend(advancedFormat);
 
 import { MdAccessTime } from "react-icons/md";
@@ -28,7 +28,7 @@ const Job = () => {
         queryKey: ["job"],
         queryFn: () =>
             getSingleHandler(
-                `http://localhost:3000/api/v1/jobs/${id}`
+                `https://careerx-server.vercel.app/api/v1/jobs/${id}`
             ),
     });
 

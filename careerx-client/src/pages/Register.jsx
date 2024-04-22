@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
-import styled from "styled-components";
-import Logo from "../components/Logo";
 import { Link, useNavigate } from "react-router-dom";
+import styled from "styled-components";
 
-import { useForm } from "react-hook-form";
 import axios from "axios";
+import { useForm } from "react-hook-form";
 import Swal from "sweetalert2";
+import Navbar from "../components/shared/Navbar";
 
 const Register = () => {
     const {
@@ -38,13 +38,13 @@ const Register = () => {
             // posting
             try {
                 const response = await axios.post(
-                    "http://localhost:3000/api/v1/auth/register",
+                    "https://careerx-server.vercel.app/api/v1/auth/register",
                     user
                 );
 
                 Swal.fire({
                     icon: "success",
-                    title: "Hurray...",
+                    title: "Congratulations!",
                     text: response?.data?.message,
                 });
                 reset();
@@ -72,11 +72,10 @@ const Register = () => {
     }, [isPasswordMatched.status]);
 
     return (
+        <>
+        <Navbar/>
         <Wrapper>
             <div className="container">
-                <div className="flex justify-center">
-                    <Logo />
-                </div>
                 <h1>Create Account</h1>
                 {!isPasswordMatched?.status && (
                     <p className="text-[11px] font-semibold text-center text-red-700 bg-red-100 px-1 py-2 mt-4 tracking-wider">
@@ -90,7 +89,7 @@ const Register = () => {
                             type="text"
                             name="username"
                             autoComplete="off"
-                            placeholder="Type Here"
+                            placeholder="Your Username Here"
                             {...register("username", {
                                 required: {
                                     value: true,
@@ -146,7 +145,7 @@ const Register = () => {
                         <input
                             type="password"
                             name="password"
-                            placeholder="Type Here"
+                            placeholder="Your Password Here"
                             {...register("password", {
                                 required: {
                                     value: true,
@@ -179,7 +178,7 @@ const Register = () => {
                         <input
                             type="password"
                             name="password"
-                            placeholder="Type Here"
+                            placeholder="Retype Your Password Here"
                             {...register("confirmPassword", {
                                 required: {
                                     value: true,
@@ -203,12 +202,12 @@ const Register = () => {
                     <p className="text-center text-[10px] font-semibold opacity-9 mt-3">
                         Already have an account.
                         <Link className="ml-1 link" to="/login">
-                            Login now
+                            Login
                         </Link>
                     </p>
                 </div>
             </div>
-        </Wrapper>
+        </Wrapper></>
     );
 };
 

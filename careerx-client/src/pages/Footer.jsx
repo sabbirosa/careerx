@@ -1,4 +1,5 @@
 import React from "react";
+import logo from "../assets/img/careerx-logo.png";
 
 const Footer = () => {
   return (
@@ -10,7 +11,7 @@ const Footer = () => {
               <div className="mb-10 w-full">
                 <a href="/#" className="mb-6 inline-block max-w-[160px]">
                   <img
-                    src="/src/assets/img/careerx-logo.png"
+                    src={logo}
                     alt="logo"
                     className="max-w-full"
                   />
@@ -140,33 +141,6 @@ const Footer = () => {
           </div>
         </div>
         <div>
-          <span className="absolute bottom-0 left-0 z-[-1]">
-            <svg
-              width={217}
-              height={229}
-              viewBox="0 0 217 229"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M-64 140.5C-64 62.904 -1.096 1.90666e-05 76.5 1.22829e-05C154.096 5.49924e-06 217 62.904 217 140.5C217 218.096 154.096 281 76.5 281C-1.09598 281 -64 218.096 -64 140.5Z"
-                fill="url(#paint0_linear_1179_5)"
-              />
-              <defs>
-                <linearGradient
-                  id="paint0_linear_1179_5"
-                  x1="76.5"
-                  y1={281}
-                  x2="76.5"
-                  y2="1.22829e-05"
-                  gradientUnits="userSpaceOnUse"
-                >
-                  <stop stopColor="#3056D3" stopOpacity="0.08" />
-                  <stop offset={1} stopColor="#C4C4C4" stopOpacity={0} />
-                </linearGradient>
-              </defs>
-            </svg>
-          </span>
 
         </div>
       </footer>

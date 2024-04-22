@@ -1,11 +1,11 @@
 import React, { createContext, useContext, useState } from "react";
-import Wrapper from "../assets/css/wrappers/Dashboard";
 import { Outlet } from "react-router-dom";
+import Wrapper from "../assets/css/wrappers/Dashboard";
 
-import { SmallSidebar, LargeSidebar, DashboardNavbar } from "../components";
-import Swal from "sweetalert2";
-import { useUserContext } from "../context/UserContext";
 import axios from "axios";
+import Swal from "sweetalert2";
+import { DashboardNavbar, LargeSidebar, SmallSidebar } from "../components";
+import { useUserContext } from "../context/UserContext";
 
 const DashboardContext = createContext();
 
@@ -16,7 +16,7 @@ const DashboardLayout = () => {
     const handleLogout = async () => {
         try {
             const response = await axios.post(
-                "http://localhost:3000/api/v1/auth/logout",
+                "https://careerx-server.vercel.app/api/v1/auth/logout",
                 { withCredentials: true }
             );
             Swal.fire({

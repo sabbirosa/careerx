@@ -1,20 +1,20 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import styled from "styled-components";
 
-import { TfiLocationPin } from "react-icons/tfi";
 import { BsFillBriefcaseFill } from "react-icons/bs";
-import { TbTargetArrow } from "react-icons/tb";
 import { FaRegCalendarAlt } from "react-icons/fa";
+import { TbTargetArrow } from "react-icons/tb";
+import { TfiLocationPin } from "react-icons/tfi";
 
-import advancedFormat from "dayjs/plugin/advancedFormat";
 import dayjs from "dayjs";
+import advancedFormat from "dayjs/plugin/advancedFormat";
 dayjs.extend(advancedFormat);
 
 import { useUserContext } from "../../context/UserContext";
 
 import { Link } from "react-router-dom";
-import { postHandler } from "../../utils/FetchHandlers";
 import Swal from "sweetalert2";
+import { postHandler } from "../../utils/FetchHandlers";
 
 const JobCard = ({ job }) => {
     const date = dayjs(job?.jobDeadline).format("MMM Do, YYYY");
@@ -33,12 +33,12 @@ const JobCard = ({ job }) => {
         };
         try {
             const response = await postHandler({
-                url: "http://localhost:3000/api/v1/application/apply",
+                url: "https://careerx-server.vercel.app/api/v1/application/apply",
                 body: appliedJob,
             });
             Swal.fire({
                 icon: "success",
-                title: "Hurray...",
+                title: "Congratulations!",
                 text: response?.data?.message,
             });
         } catch (error) {
@@ -122,8 +122,8 @@ const Wrapper = styled.div`
     margin: 0 auto;
     .card-container {
         height: 100%;
-        box-shadow: 0 4px 4px var(--shadow-medium),
-            0 -2px 6px var(--shadow-medium);
+        box-shadow: 0 4px 4px var(--shadow-light),
+            0 -2px 6px var(--shadow-light);
         border-radius: 4px;
         padding: 2rem 1.5rem;
     }

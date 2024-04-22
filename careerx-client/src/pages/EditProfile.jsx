@@ -1,18 +1,16 @@
 import React from "react";
 import { CiSquarePlus } from "react-icons/ci";
 import styled from "styled-components";
-import LoadingComTwo from "../components/shared/LoadingComTwo";
 
-import { getSingleHandler } from "../utils/FetchHandlers";
-import { useQuery, useMutation, QueryClient } from "@tanstack/react-query";
+import { QueryClient } from "@tanstack/react-query";
 const queryClient = new QueryClient();
 
 import { useForm } from "react-hook-form";
 
 import Swal from "sweetalert2";
 
-import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
+import { useNavigate, useParams } from "react-router-dom";
 import { useUserContext } from "../context/UserContext";
 
 const EditProfile = () => {
@@ -29,7 +27,7 @@ const EditProfile = () => {
     //     queryKey: ["profile"],
     //     queryFn: async () => {
     //         const response = await axios.get(
-    //             `http://localhost:3000/api/v1/users/${id}`
+    //             `https://careerx-server.vercel.app/api/v1/users/${id}`
     //         );
     //         return response.data;
     //     },
@@ -60,7 +58,7 @@ const EditProfile = () => {
             }
 
             const response = await axios.patch(
-                `http://localhost:3000/api/v1/users`,
+                `https://careerx-server.vercel.app/api/v1/users`,
                 updateUser,
                 {
                     withCredentials: true,
@@ -110,7 +108,7 @@ const EditProfile = () => {
                                     type="text"
                                     id="username"
                                     name="username"
-                                    placeholder="Type Here"
+                                    placeholder="Your Username Here"
                                     defaultValue={user?.username}
                                     {...register("username", {
                                         required: {
@@ -141,7 +139,7 @@ const EditProfile = () => {
                                     type="email"
                                     id="email"
                                     name="email"
-                                    placeholder="Type Here"
+                                    placeholder="user@gmail.com"
                                     defaultValue={user?.email}
                                     readOnly
                                 />
@@ -159,7 +157,7 @@ const EditProfile = () => {
                                     type="text"
                                     id="role"
                                     name="role"
-                                    placeholder="Type Here"
+                                    placeholder="user"
                                     defaultValue={user?.role}
                                     readOnly
                                 />

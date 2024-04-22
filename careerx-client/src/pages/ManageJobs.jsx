@@ -1,17 +1,15 @@
 import React from "react";
 import { CiSquarePlus } from "react-icons/ci";
 import styled from "styled-components";
-import { useJobContext } from "../context/JobContext";
 import LoadingComTwo from "../components/shared/LoadingComTwo";
 
 import { FaRegEdit } from "react-icons/fa";
-import { MdDelete } from "react-icons/md";
-import { MdVisibility } from "react-icons/md";
+import { MdDelete, MdVisibility } from "react-icons/md";
 
-import Swal from "sweetalert2";
+import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { Link } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
+import Swal from "sweetalert2";
 import { getAllHandler } from "../utils/FetchHandlers";
 
 const ManageJobs = () => {
@@ -25,7 +23,7 @@ const ManageJobs = () => {
         queryKey: ["my-jobs"],
         queryFn: () =>
             getAllHandler(
-                `http://localhost:3000/api/v1/jobs/my-jobs`
+                `https://careerx-server.vercel.app/api/v1/jobs/my-jobs`
             ),
     });
 
@@ -48,14 +46,14 @@ const ManageJobs = () => {
     const deleteJobHandler = async (id) => {
         try {
             const response = await axios.delete(
-                `http://localhost:3000/api/v1/jobs/${id}`,
+                `https://careerx-server.vercel.app/api/v1/jobs/${id}`,
                 { withCredentials: true }
             );
 
             // const updateJobs = jobs?.result?.filter((job) => job._id !== id);
             // setJobs(updateJobs);
             // handleJobFetch(
-            //     `http://localhost:3000/api/v1/jobs?page=1`
+            //     `https://careerx-server.vercel.app/api/v1/jobs?page=1`
             // );
             refetch();
             Swal.fire({
@@ -88,7 +86,7 @@ const ManageJobs = () => {
     if (!jobs?.result?.length) {
         return (
             <h2 className="text-lg md:text-3xl font-bold text-red-600 text-center mt-12">
-                -- Job List is Empty --
+                Job List is Empty
             </h2>
         );
     }

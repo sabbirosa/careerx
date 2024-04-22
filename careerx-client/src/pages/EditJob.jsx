@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from "react";
+import { CiSquarePlus } from "react-icons/ci";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import { getSingleHandler, updateHandler } from "../utils/FetchHandlers";
-import { CiSquarePlus } from "react-icons/ci";
 
 import { Job_Status, Job_Type } from "../utils/JobData";
 
 import { useForm } from "react-hook-form";
-import axios from "axios";
 import Swal from "sweetalert2";
 
 import { TagsInput } from "react-tag-input-component";
@@ -17,11 +16,11 @@ import LoadingComTwo from "../components/shared/LoadingComTwo";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
-import advancedFormat from "dayjs/plugin/advancedFormat";
 import dayjs from "dayjs";
+import advancedFormat from "dayjs/plugin/advancedFormat";
 dayjs.extend(advancedFormat);
 
-import { useQuery, useMutation, QueryClient } from "@tanstack/react-query";
+import { QueryClient, useMutation, useQuery } from "@tanstack/react-query";
 const queryClient = new QueryClient(); // Create a client
 
 const EditJob = () => {
@@ -35,7 +34,7 @@ const EditJob = () => {
         queryKey: ["updateJob"],
         queryFn: () =>
             getSingleHandler(
-                `http://localhost:3000/api/v1/jobs/${id}`
+                `https://careerx-server.vercel.app/api/v1/jobs/${id}`
             ),
     });
 
@@ -98,7 +97,7 @@ const EditJob = () => {
         // posting;
         updateJobMutation.mutate({
             body: updateJob,
-            url: `http://localhost:3000/api/v1/jobs/${id}`,
+            url: `https://careerx-server.vercel.app/api/v1/jobs/${id}`,
         });
     };
     // const onSubmit = (data) => {
@@ -416,7 +415,7 @@ const EditJob = () => {
                                     value={facilities}
                                     onChange={setFacilities}
                                     name="facilities"
-                                    placeHolder="Type here"
+                                    placeHolder="Transportation, Food, etc"
                                     separators={["Enter", ","]}
                                     onRemoved={["Backspace"]}
                                     classNames={{

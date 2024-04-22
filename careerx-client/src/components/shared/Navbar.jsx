@@ -1,8 +1,8 @@
 /* eslint-disable react/prop-types */
 
+import { NavLink } from "react-router-dom";
 import styled from "styled-components";
 import Logo from "../Logo";
-import { NavLink } from "react-router-dom";
 
 const Navbar = ({ navbarRef }) => {
     return (
@@ -16,8 +16,10 @@ const Navbar = ({ navbarRef }) => {
                     <NavLink className="nav-item hidden sm:block" to="/dashboard">
                         Dashboard
                     </NavLink>
+
+
                     <NavLink className="nav-item" to="/login">
-                        <span className="bg-[#247BF7] text-white px-6 py-2 rounded"> Login</span>
+                        <span className="bg-primary text-white px-6 py-2 rounded"> Login</span>
                     </NavLink>
                 </div>
             </div>
@@ -29,7 +31,7 @@ const Wrapper = styled.div`
     width: 100%;
     display: flex;
     justify-content: center;
-    box-shadow: 0 5px 5px var(--shadow-light);
+    box-shadow: 0 1px 1px var(--shadow-light);
     padding: 1rem 0;
     .container {
         width: 100%;

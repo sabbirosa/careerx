@@ -1,12 +1,12 @@
 /* eslint-disable no-unused-vars */
 import React, { useState } from "react";
-import styled from "styled-components";
 import { CiSquarePlus } from "react-icons/ci";
+import styled from "styled-components";
 
 import { Job_Status, Job_Type } from "../utils/JobData";
 
-import { useForm } from "react-hook-form";
 import axios from "axios";
+import { useForm } from "react-hook-form";
 import Swal from "sweetalert2";
 
 // import ReactQuill from "react-quill";
@@ -55,7 +55,7 @@ const AddJob = () => {
         // posting;
         try {
             const response = await axios.post(
-                "http://localhost:3000/api/v1/jobs",
+                "https://careerx-server.vercel.app/api/v1/jobs",
                 newJob,
                 {
                     withCredentials: true,
@@ -387,7 +387,7 @@ const AddJob = () => {
                                     value={facilities}
                                     onChange={setFacilities}
                                     name="facilities"
-                                    placeHolder="Type here"
+                                    placeHolder="Transportation, Food"
                                     separators={["Enter", ","]}
                                     onRemoved={["Backspace"]}
                                     classNames={{

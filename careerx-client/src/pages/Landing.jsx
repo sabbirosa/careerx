@@ -24,7 +24,7 @@ const Landing = () => {
                 <div className="hero-content">
                     <div className="text-content">
                         <h1>
-                            Get Your <span className="fancy">Dream Job </span> 
+                            Get The Most <span className="fancy">Reliabale Job </span> 
                             Today!
                         </h1>
                         <p>

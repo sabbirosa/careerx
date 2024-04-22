@@ -1,6 +1,5 @@
-import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
-import { getAllHandler } from "../utils/FetchHandlers";
+import React, { useContext, useEffect, useState } from "react";
 
 const jobContext = React.createContext();
 
@@ -25,7 +24,7 @@ const JobContext = ({ children }) => {
 
     useEffect(() => {
         handleJobFetch(
-            `http://localhost:3000/api/v1/jobs?page=1`
+            `https://careerx-server.vercel.app/api/v1/jobs?page=1`
         );
     }, []);
     const passing = {
@@ -43,4 +42,5 @@ const JobContext = ({ children }) => {
 
 const useJobContext = () => useContext(jobContext);
 
-export { useJobContext, JobContext };
+export { JobContext, useJobContext };
+

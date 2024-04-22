@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { Job_Status, Job_Type, Job_Sort_By } from "../../utils/JobData";
+import { Job_Sort_By, Job_Status, Job_Type } from "../../utils/JobData";
 
-import { CiFilter } from "react-icons/ci";
-import { CiSearch } from "react-icons/ci";
+import { CiFilter, CiSearch } from "react-icons/ci";
 import { useJobContext } from "../../context/JobContext";
 
 const SearchAndFilter = () => {
@@ -16,7 +15,7 @@ const SearchAndFilter = () => {
 
     useEffect(() => {
         const baseUrl =
-            "http://localhost:3000/api/v1/jobs?page=1&limit=5";
+            "https://careerx-server.vercel.app/api/v1/jobs?page=1&limit=5";
         let url = baseUrl;
         const queryParams = {};
 

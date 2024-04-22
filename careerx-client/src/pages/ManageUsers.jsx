@@ -1,13 +1,13 @@
 import React from "react";
-import { useUserContext } from "../context/UserContext";
-import LoadingComTwo from "../components/shared/LoadingComTwo";
 import { CiSquarePlus } from "react-icons/ci";
 import styled from "styled-components";
+import LoadingComTwo from "../components/shared/LoadingComTwo";
+import { useUserContext } from "../context/UserContext";
 
-import Swal from "sweetalert2";
-import { getAllHandler } from "../utils/FetchHandlers";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import Swal from "sweetalert2";
+import { getAllHandler } from "../utils/FetchHandlers";
 
 const ManageUsers = () => {
     const { user: me } = useUserContext();
@@ -20,7 +20,7 @@ const ManageUsers = () => {
     } = useQuery({
         queryKey: ["users"],
         queryFn: () =>
-            getAllHandler(`http://localhost:3000/api/v1/users`),
+            getAllHandler(`https://careerx-server.vercel.app/api/v1/users`),
     });
 
     const updateUserModal = (id, role) => {
@@ -43,7 +43,7 @@ const ManageUsers = () => {
         const updateUser = { id, role };
         try {
             const response = await axios.patch(
-                `http://localhost:3000/api/v1/admin/update-role`,
+                `https://careerx-server.vercel.app/api/v1/admin/update-role`,
                 updateUser,
                 { withCredentials: true }
             );

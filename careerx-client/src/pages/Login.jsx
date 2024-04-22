@@ -1,12 +1,12 @@
 /* eslint-disable react/no-unescaped-entities */
 import React, { useState } from "react";
-import styled from "styled-components";
-import Logo from "../components/Logo";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import styled from "styled-components";
 
-import { useForm } from "react-hook-form";
 import axios from "axios";
+import { useForm } from "react-hook-form";
 import Swal from "sweetalert2";
+import Navbar from "../components/shared/Navbar";
 import { useUserContext } from "../context/UserContext";
 
 const Login = () => {
@@ -30,7 +30,7 @@ const Login = () => {
         // posting
         try {
             const response = await axios.post(
-                "http://localhost:3000/api/v1/auth/login",
+                "https://careerx-server.vercel.app/api/v1/auth/login",
                 data,
                 {
                     withCredentials: true,
@@ -38,7 +38,7 @@ const Login = () => {
             );
             Swal.fire({
                 icon: "success",
-                title: "Hurray...",
+                title: "Congratulations!",
                 text: response?.data?.message,
             });
             handleFetchMe();
@@ -57,11 +57,12 @@ const Login = () => {
     };
 
     return (
+        <>
+        <Navbar/>
         <Wrapper>
+            
             <div className="container">
-                <div className="flex justify-center">
-                    <Logo />
-                </div>
+
                 <h1>Login</h1>
                 <form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
                     <div className="row">
@@ -88,7 +89,7 @@ const Login = () => {
                         <input
                             type="password"
                             name="password"
-                            placeholder="Type Here"
+                            placeholder="Your Password Here"
                             {...register("password", {
                                 required: {
                                     value: true,
@@ -112,12 +113,13 @@ const Login = () => {
                     <p className="text-center text-[10px] font-semibold opacity-9 mt-3">
                         Don't have an account.
                         <Link className="ml-1 link" to="/register">
-                            Create account
+                        Register
                         </Link>
                     </p>
                 </div>
             </div>
         </Wrapper>
+        </>
     );
 };
 

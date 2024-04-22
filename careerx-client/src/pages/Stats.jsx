@@ -3,20 +3,19 @@ import React, { useState } from "react";
 import { getAllHandler } from "../utils/FetchHandlers";
 
 import {
-    ResponsiveContainer,
-    AreaChart,
     Area,
-    XAxis,
-    YAxis,
-    CartesianAxis,
-    Tooltip,
-    CartesianGrid,
-    BarChart,
+    AreaChart,
     Bar,
-    Legend,
-    PieChart,
-    Pie,
+    BarChart,
+    CartesianGrid,
     Cell,
+    Legend,
+    Pie,
+    PieChart,
+    ResponsiveContainer,
+    Tooltip,
+    XAxis,
+    YAxis
 } from "recharts";
 import LoadingComTwo from "../components/shared/LoadingComTwo";
 
@@ -32,7 +31,7 @@ const Stats = () => {
         queryKey: ["stats"],
         queryFn: () =>
             getAllHandler(
-                `http://localhost:3000/api/v1/admin/stats`
+                `https://careerx-server.vercel.app/api/v1/admin/stats`
             ),
     });
 
